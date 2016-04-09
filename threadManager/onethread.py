@@ -11,6 +11,7 @@ class onethread(threading.Thread):
         global num
         threading.Thread.__init__(self)
         self.name = name
+        self.running = 0
         num += 1
         #self.hostlist =  hostlist
 
@@ -29,8 +30,9 @@ class onethread(threading.Thread):
         hostmanager.instance().setresult(host, flag)
 
     def run(self):
+        self.running = 1
         print "run thread {0}".format(self.name)
-        while True:
+        while self.running:
             host = onethread.gethost()
             if host is None:
                 return 0
@@ -42,3 +44,6 @@ class onethread(threading.Thread):
             else:
                 onethread.setresult(host, False)
                 print "thread {0} host {1} is over with {2}".format(self.name, host, False)
+
+    def stop(self):
+        self.running = 0

@@ -1,6 +1,6 @@
-# -*- coding:utf-8 -*-
 import sys
 import shlex, subprocess
+import chardet
 
 
 class pingTask:
@@ -19,15 +19,35 @@ class pingTask:
             self.cmd += ' -c 3 '
         self.cmd += self.host
         # os.popen(self.cmd, 'r', self.result)
+        print "default coding type: {0}".format(sys.getdefaultencoding())
+        reload(sys)
+        sys.setdefaultencoding('utf-8')
         args = shlex.split(self.cmd)
         p = subprocess.Popen(args, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-        (self.output, self.outerr) = p.communicate()
+        (tmpoutput, tmpouterr) = p.communicate()
         self.retcode = p.returncode
+        self.output = "".join(tmpoutput)
+        self.outerr = "".join(tmpouterr)
         print "return code: %d" % self.retcode
-        print "stdout:\n%s" % self.output
-        print "stderr:\n%s" % self.outerr
+        print "stdout:"
+        if self.output:
+            if not isinstance(self.output, unicode):
+                self.output = self.output.decode(chardet.detect(self.output)['encoding'])
+            print self.output
+        print "stderr:"
+        if self.outerr:
+            if not isinstance(self.outerr, unicode):
+                self.outerr = self.outerr.decode(chardet.detect(self.outerr)['encoding'])
+            print self.outerr
+        '''
+        infos = subprocess.Popen(args, stdout=subprocess.PIPE, shell=False).stdout.readlines()
+
+        unicode_text = ''.join(infos)
+        print chardet.detect(unicode_text)
+        #print unicode_text.decode('gbk')
+        '''
 
 if __name__ == '__main__':
-    p = pingTask('192.168.118.100')
+    p = pingTask('192.168.118.200')
     p.dotask()
 

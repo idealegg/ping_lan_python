@@ -29,12 +29,16 @@ class hostmanager:
     def setresult(self, host, flag):
         self.resultmap[host] = flag
 
+    def getresult(self):
+        tmplist = []
+        keylist = self.resultmap.keys()
+        keylist.sort()
+        for key in keylist:
+            tmplist.append("%-16s%-5s" % (key, self.resultmap[key]))
+        return tmplist
+
     def printf(self):
-        #print "hostlist: %s %s %s" % (" ".join(self.hostlist), self.__class__, self.__module__)
-        #print "resultlist: %s%" % " ".join(self.resultmap.keys())
-        print "hostlist:"
         pprint.pprint(self.hostlist)
-        print "resultlist:"
         pprint.pprint(self.resultmap)
 
     @classmethod

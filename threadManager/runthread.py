@@ -12,7 +12,7 @@ class runthread:
     def genhostlist(self, network='192.168.118', max=256):
         self.hostlist=[]
         for i in range(max):
-            self.hostlist.append(network+'.'+str(i))
+            self.hostlist.append("".join((network, '.', str(i))))
         #print "runthread genhostlist:"
         #pprint.pprint(self.hostlist)
 
@@ -33,6 +33,11 @@ class runthread:
             self.threadlist[i].join()
             print "joined a thread %d" % i
         hostmanager.instance().printf()
+        return 0
+
+    def stop(self):
+        for i in range(self.num):
+            self.threadlist[i].stop()
 
 if __name__ == '__main__':
     rt = runthread(2)

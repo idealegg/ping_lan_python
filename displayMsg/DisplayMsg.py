@@ -7,34 +7,42 @@ import time
 class DisplayMsg(Tkinter.Tk):
     def __init__(self):
         Tkinter.Tk.__init__(self)
+        self.title("Get Lan Info")
+        self.geometry('300x200')
+        self.iconname("haha")
         self.frame = Tkinter.Frame(self, relief=RIDGE, borderwidth=2)
         self.frame.pack(fill=BOTH, expand=1)
         self.var = Tkinter.StringVar()
-        self.entry = Tkinter.Entry(self.frame, textvariable=self.var)
-        self.var.set("hello world")
-        self.entry.pack()
-        #self.text = Tkinter.Text(self.frame)
-        #self.text.insert(END, "hello world\n")
-        #self.text.pack(fill=X, expand=1)
-        #self.button1 = Tkinter.Button(self.frame, text="Run", command=self.runframe)
-        #self.button1.pack(side=TOP)
-        self.button2 = Tkinter.Button(self.frame, text="Exit", command=self.destroy)
+        self.listbox = Tkinter.Listbox(self.frame, height=5, selectmode=BROWSE, listvariable=self.var)
+        self.list_item = tuple(hostmanager.instance().getresult())
+        self.var.set(self.list_item)
+        self.scrl = Tkinter.Scrollbar(self.frame)
+        self.scrl.pack(side=RIGHT, fill=Y)
+        self.listbox.configure(yscrollcommand=self.scrl.set)
+        self.listbox.pack(side=LEFT, fill=BOTH)
+        self.scrl['command'] = self.listbox.yview
+        self.button2 = Tkinter.Button(self.frame, text="Exit", command=self.exit)
         self.button2.pack(side=BOTTOM)
-        #self.after_idle(self.runframe)
+        self.done = 0
+        self.starttime = time.time()
+
+    def exit(self):
+        self.done = 1
+        self.destroy()
 
     def run(self):
-        while True:
+        #num = 0
+        while not self.done:
             time.sleep(1)
-            datetime = time.time()
-            #var = Tkinter.StringVar()
-            self.var.set(str(datetime))
-            #self.text.delete(1.0)
-            #self.text.insert(END, str(datetime)+"\n")
-            #self.label.setvar(name='text', value="1234")
-            #self.frame.after()
-            #self.text.pack(fill=X, expand=1)
-            #self.text.update()
-            #self.frame.update()
+            #num += 1
+            #runtime = time.time() - self.starttime
+            #tmplist = list(self.list_item)
+            #for i in range(len(tmplist)):
+                #tmplist[i] += runtime
+
+            #tmplist.insert(0, num)
+            self.list_item = tuple(hostmanager.instance().getresult())
+            self.var.set(self.list_item)
             self.update()
 
 
