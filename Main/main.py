@@ -50,7 +50,7 @@ class main:
 
 
 if __name__ == '__main__':
-    hostmanager.instance().genhostlist(network='192.168.1', max=120, min=100)
+    hostmanager.instance().genhostlist(network='192.168.118', max=120, min=100)
     m = main(5)
     m.run()
 
