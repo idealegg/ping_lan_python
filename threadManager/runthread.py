@@ -9,16 +9,8 @@ class runthread:
         self.hostlist = []
         self.threadlist = []
 
-    def genhostlist(self, network='192.168.118', max=256):
-        self.hostlist=[]
-        for i in range(max):
-            self.hostlist.append("".join((network, '.', str(i))))
-        #print "runthread genhostlist:"
-        #pprint.pprint(self.hostlist)
-
-    def dorun(self, network='192.168.118', max=256):
-        self.genhostlist(network, max)
-        hostmanager.instance().addhostlist(self.hostlist)
+    def dorun(self):
+        #hostmanager.instance().addhostlist(self.hostlist)
         hostmanager.instance().printf()
         for i in range(self.num):
             print "adding a thread %d" % i
@@ -40,5 +32,6 @@ class runthread:
             self.threadlist[i].stop()
 
 if __name__ == '__main__':
+    hostmanager.instance().genhostlist(network='192.168.118', max=10, min=2)
     rt = runthread(2)
-    rt.dorun(max=10)
+    rt.dorun()

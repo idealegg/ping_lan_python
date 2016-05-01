@@ -1,4 +1,5 @@
 import threading
+import re
 from workTask.pingTask import pingTask
 from hostManager.hostmanager import hostmanager
 
@@ -39,11 +40,22 @@ class onethread(threading.Thread):
             p = pingTask(host)
             p.dotask()
             if p.retcode == 0:
-                onethread.setresult(host, True)
-                print "thread {0} host {1} is over with {2}".format(self.name, host, True)
+                tmp = re.search('TTL=\d+', p.output)
+                if tmp is not None:
+                    onethread.setresult(host, True)
+                    print "thread {0} host {1} is over with {2}".format(self.name, host, True)
+                else:
+                    onethread.setresult(host, False)
+                    print "thread {0} host {1} is over with {2}".format(self.name, host, False)
             else:
                 onethread.setresult(host, False)
                 print "thread {0} host {1} is over with {2}".format(self.name, host, False)
 
     def stop(self):
         self.running = 0
+
+if __name__ == '__main__':
+    hostmanager.instance().genhostlist(network='192.168.1', max=106, min=105)
+    ot = onethread()
+    ot.start()
+    ot.join()

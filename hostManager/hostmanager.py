@@ -17,6 +17,11 @@ class hostmanager:
         #pprint.pprint(hostmanager.__instance__.hostlist)
         #print "end addhostlist ##################"
 
+    def genhostlist(self, network='192.168.118', max=255, min=2):
+        self.hostlist=[]
+        for i in range(min, max):
+            self.hostlist.append("".join((network, '.', str(i))))
+
     def removehost(self, host):
         self.hostlist.remove(host)
 

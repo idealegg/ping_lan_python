@@ -1,5 +1,6 @@
 from threadManager.runthread import runthread
 from displayMsg.DisplayMsg import DisplayMsg
+from hostManager.hostmanager import hostmanager
 import threading
 
 dmstop = 0
@@ -18,23 +19,21 @@ class dmThread(threading.Thread):
 
 
 class rhThread(threading.Thread):
-    def __init__(self, tnum=2, hnum=10, network='192.168.118'):
+    def __init__(self, tnum=2):
         threading.Thread.__init__(self)
         self.rh = runthread(tnum)
         #self.tnum = tnum
-        self.hnum = hnum
-        self.network = network
 
     def run(self):
         global rhstop
-        self.rh.dorun(max=self.hnum, network=self.network)
+        self.rh.dorun()
         rhstop = 1
 
 
 class main:
-    def __init__(self, tnum, hnum):
+    def __init__(self, tnum=2):
         self.dm = dmThread()
-        self.rh = rhThread(tnum, hnum)
+        self.rh = rhThread(tnum)
 
     def run(self):
         self.rh.start()
@@ -51,7 +50,8 @@ class main:
 
 
 if __name__ == '__main__':
-    m = main(2, 10)
+    hostmanager.instance().genhostlist(network='192.168.1', max=120, min=100)
+    m = main(5)
     m.run()
 
 
